@@ -14,7 +14,11 @@
     <div class="form-group">
         <label for="course-select">Select Course</label>
         <select class="form-control" id="course-select"></select>
+        <button onclick="functionTeeBox()">SELECT</button>
       </div>
+      <select id="tee-box-select">
+      </select>
+      <button onclick="renderScoreCard()">GO!!!</button>
     <div class="container">
         <div class="row">
             <div class="col-lg-12" id="header"></div>
@@ -26,9 +30,12 @@
         </div>
  
         <div class="row" id="scorecard-container">
-            <div class="col-lg-12" id="scorecard">
+            <div class="col-lg-12">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="scorecard">
+
+
+
                     </table>
                 </div>
  
@@ -39,5 +46,10 @@
             </div>
         </div>
     </div>
+    <div class="table-responsive">
+        <table class="table">
+          ...
+        </table>
+      </div>
 </body>
 </html>

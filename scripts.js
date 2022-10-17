@@ -5,6 +5,7 @@
 //       }
 //     );
 //    }
+player = [];
 let data = {};
    async function getAvailableCourses() {
     let response = await fetch('https://golf-courses-api.herokuapp.com/courses/');
@@ -36,6 +37,8 @@ async function getCourseData() {
 }
 
 async function functionTeeBox() {
+    document.getElementsByClassName('invisibleSelect')[0].classList.remove('invisible');
+    document.getElementsByClassName('invisibleSelect')[1].classList.remove('invisible');
     let result = await getCourseData();
     let teeBoxes = result.holes[0].teeBoxes;
     let teeBoxSelectHtml = ''
@@ -52,6 +55,7 @@ document.getElementById('tee-box-select').innerHTML = teeBoxSelectHtml;
 
 async function renderScoreCard() {
     let result = await getCourseData();
+    let teeBoxChoice = document.getElementById('tee-box-select').value
     //rendering the header ---------------------------------------------------------------------------------------------------------------
     let innerTableContent = '<th scope="col">Holes</th>';
     document.getElementById('scorecard').innerHTML = '<thead id="tableHeader"></thead><tbody id="tableBody"></tbody>';
@@ -72,7 +76,7 @@ async function renderScoreCard() {
     let yardOut = 0;
     let parOut = 0;
     let hcpOut = 0;
-    let teeBoxChoice = 0;
+    
     for (let i = 0; i < result.holes.length; i++) {
         yardage = result.holes[i].teeBoxes[teeBoxChoice].yards;
         yardOut += yardage;
@@ -93,8 +97,60 @@ async function renderScoreCard() {
             hcp = result.holes[i].teeBoxes[teeBoxChoice].hcp;
             hcpOut += hcp;
         innerTableContentBody += `<th scope="col">${hcp}</th>`}
-        innerTableContentBody += `<th scope="col">${hcpOut}</th><tr>`
+        innerTableContentBody += `<th scope="col">${hcpOut}</th></tr>`;
 
+
+        for (let j = 0; j < player.length; j++) {
+            innerTableContentBody += `<tr><th scope="col">${player[j].name}</th>`
+            for (let i = 0; i < result.holes.length; i++) {
+                if (player[j].scores[i]) {
+                    playerScore = player[j].scores[i]
+                } else {
+                    playerScore = '';
+                }
+                
+                innerTableContentBody += `<th>${playerScore}</th>`
+            }
+            innerTableContentBody += `<th scope="col">${playerScore}</th></tr>`;
+        }
 
     document.getElementById('tableBody').innerHTML =  innerTableContentBody;
+    document.getElementById('addPlayer').style.visibility = 'visible';
+    document.getElementById('header').innerHTML = `<h2>${result.name}</h2><div class='coolBorder my-1'></div>`;
+}
+
+class players {
+    constructor(name, id = getNextId(), scores = []) {
+        this.name = name;
+        this.id = id;
+        this.scores = scores;
+    }
+}
+let buttonCounter = 0;
+function addPerson() {
+    
+    if (buttonCounter === 0) {
+        document.getElementsByClassName('createName')[0].style.visibility = 'visible';
+        document.getElementsByClassName('createName')[0].classList.remove('animate__zoomOut');
+        document.getElementsByClassName('createName')[0].classList.add('animate__zoomIn');
+        buttonCounter = 1;
+    } else if (buttonCounter === 1) {
+        document.getElementsByClassName('createName')[0].classList.remove('animate__zoomIn');
+        document.getElementsByClassName('createName')[0].classList.add('animate__zoomOut');
+        setTimeout(() => document.getElementsByClassName('createName')[0].style.visibility = 'hidden', 400);
+        buttonCounter = 0
+    }
+}
+
+function updateTable(name) {
+    if (name) {
+    let myMan = new players(name);
+    player.push(myMan);
+    renderScoreCard();
+    }
+}
+
+function getNextId() {
+    let stamp = new Date().getTime()
+    return stamp
 }

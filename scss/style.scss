@@ -1,0 +1,56 @@
+$orange: #F79A64;
+$green: #a4d9a5;
+$blue: #B8E1FF;
+$black: #161411;
+
+
+.fa-solid {
+    font-size: 30px;
+}
+.bg-orange {
+    background-color: $orange;
+}
+
+.bg-green {
+    background-color: $green;
+}
+
+.bg-blue {
+    background-color: $blue;
+}
+
+.bg-black {
+    background-color: $black;
+}
+
+
+.invisible {
+    visibility: hidden;
+}
+
+#addPlayer {
+    visibility: hidden;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    border-color: rgb(58, 135, 58);
+}
+
+.createName {
+    visibility: hidden;
+    position: fixed;
+    width: 300px;
+    height: 100px;
+    animation-duration: .4s;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.enterName {
+    width: 300px;
+}
+
+.coolBorder {
+    height: 7px;
+    width: 100px;
+    background-color: $green;
+}

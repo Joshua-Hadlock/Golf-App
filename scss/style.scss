@@ -1,5 +1,7 @@
 $orange: #F79A64;
 $green: #a4d9a5;
+$darkerGreen: #6da16e;
+$darkerOrange: #c37243;
 $blue: #B8E1FF;
 $black: #161411;
 
@@ -12,7 +14,7 @@ $black: #161411;
 }
 
 .bg-green {
-    background-color: $green;
+    background-color: $green; 
 }
 
 .bg-blue {
@@ -53,4 +55,25 @@ $black: #161411;
     height: 7px;
     width: 100px;
     background-color: $green;
+}
+
+.shadow {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.shadow:hover {
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.hover-green:hover {
+    background-color: $darkerGreen;
+}
+
+.hover-orange:hover {
+    background-color: $darkerOrange;
+}
+
+.myTitle {
+    font-family: 'DM Serif Text', serif;
+    font-size: 45px;
 }

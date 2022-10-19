@@ -5,7 +5,9 @@
 //       }
 //     );
 //    }
+let greencolor = '#a4d9a5';
 player = [];
+var length = 0;
 let data = {};
    async function getAvailableCourses() {
     let response = await fetch('https://golf-courses-api.herokuapp.com/courses/');
@@ -52,18 +54,31 @@ document.getElementById('tee-box-select').innerHTML = teeBoxSelectHtml;
 
 
 // rendering the score card ------------------------------------------------------------------------------------------------------------
-
+let teeBoxChoice = 0;
 async function renderScoreCard() {
     let result = await getCourseData();
-    let teeBoxChoice = document.getElementById('tee-box-select').value
+    length = result.holes.length;
+    teeBoxChoice = document.getElementById('tee-box-select').value
+
     //rendering the header ---------------------------------------------------------------------------------------------------------------
     let innerTableContent = '<th scope="col">Holes</th>';
+
     document.getElementById('scorecard').innerHTML = '<thead id="tableHeader"></thead><tbody id="tableBody"></tbody>';
-    for (let i = 0; i < result.holes.length; i++) {
+
+    // out -------
+    for (let i = 0; i < length / 2; i++) {
         innerTableContent += `<th scope="col">${result.holes[i].hole}</th>`
     }
     innerTableContent += '<th scope="col">Out</th>'
-    
+
+    // in --------
+    for (let i = length / 2; i < length; i++) {
+        innerTableContent += `<th scope="col">${result.holes[i].hole}</th>`
+    }
+    innerTableContent += '<th scope="col">In</th>'
+    innerTableContent += '<th scope="col">Total</th>'
+
+
     document.getElementById('tableHeader').innerHTML = `<tr>${innerTableContent}</tr>`;
 
 
@@ -76,42 +91,109 @@ async function renderScoreCard() {
     let yardOut = 0;
     let parOut = 0;
     let hcpOut = 0;
+    let total = 0;
     
-    for (let i = 0; i < result.holes.length; i++) {
+    //out ------
+    for (let i = 0; i < length / 2; i++) {
         yardage = result.holes[i].teeBoxes[teeBoxChoice].yards;
         yardOut += yardage;
+        total += yardage;
     innerTableContentBody += `<th scope="col">${yardage}</th>`}
-    innerTableContentBody += `<th scope="col">${yardOut}</th><tr>`
+    innerTableContentBody += `<th scope="col">${yardOut}</th>`
     
+    //in -------
+    yardOut = 0;
+    for (let i = length / 2; i < length; i++) {
+        yardage = result.holes[i].teeBoxes[teeBoxChoice].yards;
+        yardOut += yardage;
+        total += yardage;
+    innerTableContentBody += `<th scope="col">${yardage}</th>`}
+    innerTableContentBody += `<th scope="col">${yardOut}</th>`;
+    innerTableContentBody += `<th scope="col">${total}</th></tr>`;
+
+
+
+
 
         // Par -----------------------------------------------------------------------------------------------------------------------------------
+        total = 0;
+        // out -----
         innerTableContentBody += '<tr><th scope="col">Par</th>';
-        for (let i = 0; i < result.holes.length; i++) {
+        for (let i = 0; i < length / 2; i++) {
             pars = result.holes[i].teeBoxes[teeBoxChoice].par;
             parOut += pars;
+            total += pars;
         innerTableContentBody += `<th scope="col">${pars}</th>`}
-        innerTableContentBody += `<th scope="col">${parOut}</th><tr>`
+        innerTableContentBody += `<th scope="col">${parOut}</th>`
+        
+        // in -----
+        parOut = 0;
+        for (let i = length / 2; i < length; i++) {
+            pars = result.holes[i].teeBoxes[teeBoxChoice].par;
+            parOut += pars;
+            total += pars;
+        innerTableContentBody += `<th scope="col">${pars}</th>`}
+        innerTableContentBody += `<th scope="col">${parOut}</th>`
+        innerTableContentBody += `<th scope="col">${total}</th></tr>`;
+
+
         // handicap ------------------------------------------------------------------------------------------------------------------------------
+        total = 0;
+        // out -----
         innerTableContentBody += '<tr><th scope="col">handicap</th>';
-        for (let i = 0; i < result.holes.length; i++) {
+        for (let i = 0; i < length / 2; i++) {
             hcp = result.holes[i].teeBoxes[teeBoxChoice].hcp;
             hcpOut += hcp;
+            total += hcp;
         innerTableContentBody += `<th scope="col">${hcp}</th>`}
-        innerTableContentBody += `<th scope="col">${hcpOut}</th></tr>`;
+        innerTableContentBody += `<th scope="col">${hcpOut}</th>`;
 
+        // in -----
+        hcpOut = 0;
+        for (let i = length / 2; i < length; i++) {
+            hcp = result.holes[i].teeBoxes[teeBoxChoice].hcp;
+            hcpOut += hcp;
+            total += hcp;
+        innerTableContentBody += `<th scope="col">${hcp}</th>`}
+        innerTableContentBody += `<th scope="col">${hcpOut}</th>`;
+        innerTableContentBody += `<th scope="col">${total}</th></tr>`;
 
+// add all players --------------------------------------------------------------------------------------------------------------------
         for (let j = 0; j < player.length; j++) {
+            total = 0;
+            let bigPlayerScore = 0;
             innerTableContentBody += `<tr><th scope="col">${player[j].name}</th>`
-            for (let i = 0; i < result.holes.length; i++) {
+
+
+            // out --------
+            for (let i = 0; i < length / 2; i++) {
                 if (player[j].scores[i]) {
                     playerScore = player[j].scores[i]
+                    bigPlayerScore += playerScore;
+                    total += playerScore
                 } else {
                     playerScore = '';
                 }
-                
-                innerTableContentBody += `<th>${playerScore}</th>`
+                innerTableContentBody += `<th onclick='addScoreData(${i}, ${player[j].id}, ${j})' data-bs-toggle="modal" data-bs-target="#newScoreModal">${playerScore}</th>`
             }
-            innerTableContentBody += `<th scope="col">${playerScore}</th></tr>`;
+            innerTableContentBody += `<th scope="col">${bigPlayerScore}</th>`;
+
+            // in ---------
+            bigPlayerScore = 0;
+            for (let i = length / 2; i < length; i++) {
+                if (player[j].scores[i]) {
+                    playerScore = player[j].scores[i]
+                    bigPlayerScore += playerScore;
+                    total += playerScore;
+                } else {
+                    playerScore = '';
+                }
+                innerTableContentBody += `<th onclick='addScoreData(${i}, ${player[j].id}, ${j})' data-bs-toggle="modal" data-bs-target="#newScoreModal">${playerScore}</th>`
+            }
+            innerTableContentBody += `<th scope="col">${bigPlayerScore}</th>`;
+            innerTableContentBody += `<th scope="col">${total}</th></tr>`;
+
+
         }
 
     document.getElementById('tableBody').innerHTML =  innerTableContentBody;
@@ -124,6 +206,12 @@ class players {
         this.name = name;
         this.id = id;
         this.scores = scores;
+    }
+
+    makeEmptyScores() {
+        for (let i = 0; i < length ; i++) {
+            this.scores.push(null);
+        }
     }
 }
 let buttonCounter = 0;
@@ -145,6 +233,7 @@ function addPerson() {
 function updateTable(name) {
     if (name) {
     let myMan = new players(name);
+    myMan.makeEmptyScores();
     player.push(myMan);
     renderScoreCard();
     }
@@ -153,4 +242,26 @@ function updateTable(name) {
 function getNextId() {
     let stamp = new Date().getTime()
     return stamp
+}
+
+var currentScoreId = 0;
+var currentPlayerId = 0;
+var currentPlayerNumber = 0;
+
+function addScoreData(scoreId, playerId, playerNumber) {
+    currentPlayerNumber = playerNumber;
+    currentPlayerId = playerId;
+    currentScoreId = scoreId;
+}
+async function addScore() {
+    let result = await getCourseData();
+
+    // - result.holes[currentScoreId].teeBoxes[teeBoxChoice].hcp
+    player[currentPlayerNumber].scores[currentScoreId] = parseInt(document.getElementById('score').value);
+    renderScoreCard();
+}
+
+function invis() {
+    document.getElementsByClassName('invisibleSelect')[0].classList.add('invisible');
+    document.getElementsByClassName('invisibleSelect')[1].classList.add('invisible');
 }

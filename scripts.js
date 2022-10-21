@@ -10,10 +10,6 @@ var currentPlayerId = 0;
 var currentPlayerNumber = 0;
 let teeBoxChoice = 0;
 
-// imports
-
-import renderScoreCard from './modules/renderScoreCard.js';
-
 // players
 class players {
     constructor(name, id = getNextId(), scores = []) {

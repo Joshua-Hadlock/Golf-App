@@ -21,47 +21,65 @@
     <script type="text/javascript"src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <!-- personal usage -->
     <link href="css/style.css" rel="stylesheet">
-    <script defer src="scripts.js"></script>
+    <script defer type="module" src="scripts.js"></script>
+    <script type="module" src="modules/renderScoreCard.js">
+      
+    </script>
     <title>Golf App</title>
 </head>
 <body>
     <div class="form-group class bg-orange d-flex justify-content-between align-items-center shadow">
     
-        <!-- top nav -->
+        <!-- top nav -------------------------------------------------------------------------------------------------------------------------------------->
         
-        
-        <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><i class="fa-solid fa-bars"></i></button>
-        <h1 class='myTitle text-center'>The Golfing Fishers</h1>
-        <i class="fa-solid fa-fish me-1"></i>
+        <div class="d-flex align-items-center" id="moveTitle">
+        <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" onclick="deleteArrow()"><i class="fa-solid fa-bars"></i></button>
+        <i class="fa-solid fa-arrow-left animate__animated animate__fadeIn animate__infinite d-flex" id="arrow"><h4 class="myFont mx-1">Click Here</h4></i>
+        </div>
+
+        <!-- title  -->
+        <h1 class='myTitle myFont text-center'>The Golfing Fishers</h1>
+        <div class="d-flex align-items-center">
+
+          <!-- little fish plus extra invisible stuff to keep the title centered -->
+          <h4 class="text-orange mx-1 invisible2 myFont">Click Here</h4>
+        <i class="fa-solid fa-fish me-1 d-flex align-items-center"></i>
+      </div>
 
 
-<!-- side nav -->
+<!-- side nav ---------------------------------------------------------------------------------------------------------------->
 <div class="offcanvas offcanvas-start shadow-lg" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
   <div class="offcanvas-header">
+
+    <!-- select course -->
     <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Course Select</h5>
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body d-flex flex-column align-items-center justify-content-start">
     <label for="course-select my-1">Select Course</label>
-    <select class="form-control my-1" id="course-select"></select>
+    <select class="form-control my-1" id="course-select" onclick='invis()'></select>
     <button onclick="functionTeeBox()" class="my-1 btn bg-green hover-green">SELECT</button>
+
+    <!-- select teeboxes -->
     <div class='d-flex flex-column align-items-center justify-content-around'>
         <select id="tee-box-select" class="invisibleSelect invisible my-1">
         </select>
-        <button onclick="renderScoreCard(), invis()" class="invisibleSelect invisible my-1 btn bg-green hover-green">GO!!!</button>
+        <button onclick="erasePlayerInformation(), renderScoreCard(), invis()" class="invisibleSelect invisible my-1 btn bg-green hover-green">GO!!!</button>
     </div>
     </div>
   </div>
 </div>
 
-<!-- score card -->
-    <div class="container d-flex justify-content-center flex-column py-5 table-responsive shadow-lg border bg-white">
+<!-- score card ----------------------------------------------------------------------------------------------------------------> 
+    <div class="container d-flex justify-content-center flex-column py-5 table-responsive shadow-lg border bg-white rounded">
         <div class="row">
             <div class="col-lg-12 d-flex justify-content-center align-items-center flex-column" id="header"><h2>Welcome!</h2><p>Start by selecting a course</p></div>
         </div>
  
         <div class="row" id="scorecard-container">
                 <div class="table-responsive">
+
+                  <!-- table full of data -->
                     <table class="table table-bordered table-striped" id="scorecard">
 
 
@@ -69,10 +87,15 @@
                     </table>
             </div>
         </div>
+        <!-- add players -->
         <div>
-            <button id="addPlayer" type="button" class="btn bg-green hover-green" data-bs-toggle="modal" data-bs-target="#addNewName">Add Player</button>
+            <button id="addPlayer" type="button" class="btn bg-green hover-green animate__animated animate__bounce animate__infinite" data-bs-toggle="modal" data-bs-target="#addNewName" onmouseover="removeAnimation(document.getElementById('addPlayer'))">Add Player</button>
         </div>
     </div>
+
+
+
+    <!-- Modals -------------------------------------------------------------------------------------------------------------------------------------->
 
 
     <!-- Modal for new person-->
@@ -87,8 +110,8 @@
           <input type="text" placeholder="Enter Name" id="newPlayer">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="updateTable(document.getElementById('newPlayer').value)">Save changes</button>
+          <button type="button" class="btn bg-orange hover-orange" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn bg-green hover-green" data-bs-dismiss="modal" onclick="updateTable(document.getElementById('newPlayer').value)">Save changes</button>
         </div>
       </div>
     </div>
@@ -108,8 +131,8 @@
           <input type="number" id='score' placeholder="enter score here">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="addScore()">Save changes</button>
+          <button type="button" class="btn bg-orange hover-orange" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn bg-green hover-green" data-bs-dismiss="modal" onclick="addScore()">Save changes</button>
         </div>
       </div>
     </div>

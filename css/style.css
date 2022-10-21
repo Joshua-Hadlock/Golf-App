@@ -6,19 +6,31 @@
   background-color: #F79A64;
 }
 
+.hover-orange:hover {
+  background-color: #c37243;
+}
+
+.text-orange {
+  color: #F79A64 !important;
+}
+
 .bg-green {
   background-color: #a4d9a5;
 }
 
-.bg-blue {
-  background-color: #B8E1FF;
+.hover-green:hover {
+  background-color: #6da16e;
 }
 
-.bg-black {
-  background-color: #161411;
+.text-green {
+  color: #6da16e !important;
 }
 
 .invisible {
+  visibility: hidden;
+}
+
+.invisible2 {
   visibility: hidden;
 }
 
@@ -30,43 +42,11 @@
   border-color: rgb(58, 135, 58);
 }
 
-.createName {
-  visibility: hidden;
-  position: fixed;
-  width: 300px;
-  height: 100px;
-  animation-duration: 0.4s;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-}
-
-.enterName {
-  width: 300px;
-}
-
-.coolBorder {
-  height: 7px;
-  width: 100px;
-  background-color: #a4d9a5;
-}
-
-.shadow {
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-
-.shadow:hover {
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-}
-
-.hover-green:hover {
-  background-color: #6da16e;
-}
-
-.hover-orange:hover {
-  background-color: #c37243;
+.myFont {
+  font-family: "DM Serif Text", serif;
 }
 
 .myTitle {
-  font-family: "DM Serif Text", serif;
   font-size: 45px;
 }
 

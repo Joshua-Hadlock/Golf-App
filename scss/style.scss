@@ -1,3 +1,4 @@
+// variables
 $orange: #F79A64;
 $green: #a4d9a5;
 $darkerGreen: #6da16e;
@@ -9,27 +10,48 @@ $black: #161411;
 .fa-solid {
     font-size: 30px;
 }
+
+// background colors ----------------------------------------------------------------------------------------------------------------
+
+// orange ----
 .bg-orange {
     background-color: $orange;
 }
 
+.hover-orange:hover {
+    background-color: $darkerOrange;
+}
+
+.text-orange {
+    color: $orange !important;
+}
+
+
+// green -------
 .bg-green {
     background-color: $green; 
 }
 
-.bg-blue {
-    background-color: $blue;
+.hover-green:hover {
+    background-color: $darkerGreen;
 }
 
-.bg-black {
-    background-color: $black;
+.text-green {
+    color: $darkerGreen !important;
 }
 
-
+// invisible stuff (there are 2 cause of javascript stuff) -------------------------------------------------------------------------
 .invisible {
     visibility: hidden;
 }
 
+.invisible2 {
+    visibility: hidden;
+}
+
+
+
+// add Player button ----------------------------------------------------------------------------------------------------------------
 #addPlayer {
     visibility: hidden;
     position: fixed;
@@ -38,46 +60,17 @@ $black: #161411;
     border-color: rgb(58, 135, 58);
 }
 
-.createName {
-    visibility: hidden;
-    position: fixed;
-    width: 300px;
-    height: 100px;
-    animation-duration: .4s;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-}
+//fonts and titles----------------------------------------------------------------------------------------------------------------
 
-.enterName {
-    width: 300px;
-}
-
-.coolBorder {
-    height: 7px;
-    width: 100px;
-    background-color: $green;
-}
-
-.shadow {
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-
-.shadow:hover {
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-}
-
-.hover-green:hover {
-    background-color: $darkerGreen;
-}
-
-.hover-orange:hover {
-    background-color: $darkerOrange;
+.myFont {
+    font-family: 'DM Serif Text', serif;
 }
 
 .myTitle {
-    font-family: 'DM Serif Text', serif;
     font-size: 45px;
 }
 
+// body image ----------------------------------------------------------------------------------------------------------------
 body {
     background-repeat: no-repeat;
     background-size: cover;

@@ -1,43 +1,9 @@
-// variables
-$orange: #F79A64;
-$green: #a4d9a5;
-$darkerGreen: #6da16e;
-$darkerOrange: #c37243;
-$blue: #B8E1FF;
-$black: #161411;
+@use '_colors.scss';
 
 
+// little image sizes ------------------------------------------------------------------------------------------------------------
 .fa-solid {
     font-size: 30px;
-}
-
-// background colors ----------------------------------------------------------------------------------------------------------------
-
-// orange ----
-.bg-orange {
-    background-color: $orange;
-}
-
-.hover-orange:hover {
-    background-color: $darkerOrange;
-}
-
-.text-orange {
-    color: $orange !important;
-}
-
-
-// green -------
-.bg-green {
-    background-color: $green; 
-}
-
-.hover-green:hover {
-    background-color: $darkerGreen;
-}
-
-.text-green {
-    color: $darkerGreen !important;
 }
 
 // invisible stuff (there are 2 cause of javascript stuff) -------------------------------------------------------------------------

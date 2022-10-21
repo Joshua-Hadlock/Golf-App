@@ -1,27 +1,50 @@
-// function getAvailableCourses() {
-//     return fetch('https://golf-courses-api.herokuapp.com/courses/').then(
-//       function (response) {
-//         return response.json();
-//       }
-//     );
-//    }
+// global variables ----------------------------------------------------------------------------------------------------------------
 let greencolor = '#a4d9a5';
 player = [];
 var length = 0;
 let data = {};
+var select = document.getElementById('course-select');
+let buttonCounter = 0;
+var currentScoreId = 0;
+var currentPlayerId = 0;
+var currentPlayerNumber = 0;
+let teeBoxChoice = 0;
+
+// players
+class players {
+    constructor(name, id = getNextId(), scores = []) {
+        this.name = name;
+        this.id = id;
+        this.scores = scores;
+        this.completed = false;
+    }
+    makeEmptyScores() {
+        for (let i = 0; i < length ; i++) {
+            this.scores.push(null);
+        }
+    }
+}
+
+// creates a unique Id for everyone
+function getNextId() {
+    let stamp = new Date().getTime()
+    return stamp
+}
+
+// get Courses ----------------------------------------------------------------------------------------------------------------
    async function getAvailableCourses() {
     let response = await fetch('https://golf-courses-api.herokuapp.com/courses/');
     data = await response.json();
     return data.courses;
 }
 
-
+// get courses and display to page ----------------------------------------------------------------------------------------------------------------
 async function askCourses() {
 let result = await getAvailableCourses();
 let courseOptionsHtml = '';
 let n = 0;
 await result.forEach((course) => {
- courseOptionsHtml += `<option value='{"id": "${course.id}","number": ${n}}'>${course.name}</option>`;
+ courseOptionsHtml += `<option value='{"id": "${course.id}","number": ${n}}' onclick="functionTeeBox()">${course.name}</option>`;
  n += 1;
 });
 
@@ -30,8 +53,7 @@ document.getElementById('course-select').innerHTML = courseOptionsHtml;
 }
 askCourses()
 
-var select = document.getElementById('course-select');
-
+// get the data for selected course ----------------------------------------------------------------------------------------------------------------
 async function getCourseData() {
     select = document.getElementById('course-select');
     
@@ -44,6 +66,7 @@ async function getCourseData() {
     return courseData.data;
 }
 
+// display teeboxes ----------------------------------------------------------------------------------------------------------------
 async function functionTeeBox() {
     renderBackPicture();
     document.getElementsByClassName('invisibleSelect')[0].classList.remove('invisible');
@@ -56,12 +79,23 @@ await teeBoxes.forEach(function (teeBox, index) {
 });
 
 document.getElementById('tee-box-select').innerHTML = teeBoxSelectHtml;
+
+
 }
 
+// erase all player information  ------------------------------------------------------------------------------------------------------------
+
+async function erasePlayerInformation() {
+    let result = await getCourseData();
+    for (let j = 0; j < player.length; j++) {
+        for (let i = 0; i < result.holes.length; i++) {
+        player[j].scores[i] = null;
+        }
+        player[j].completed = false;
+    }}
 
 
 // rendering the score card ------------------------------------------------------------------------------------------------------------
-let teeBoxChoice = 0;
 async function renderScoreCard() {
     let result = await getCourseData();
     length = result.holes.length;
@@ -76,14 +110,14 @@ async function renderScoreCard() {
     for (let i = 0; i < length / 2; i++) {
         innerTableContent += `<th scope="col">${result.holes[i].hole}</th>`
     }
-    innerTableContent += '<th scope="col">Out</th>'
+    innerTableContent += '<th scope="col" class="text-green">Out</th>'
 
     // in --------
     for (let i = length / 2; i < length; i++) {
         innerTableContent += `<th scope="col">${result.holes[i].hole}</th>`
     }
-    innerTableContent += '<th scope="col">In</th>'
-    innerTableContent += '<th scope="col">Total</th>'
+    innerTableContent += '<th scope="col" class="text-green">In</th>'
+    innerTableContent += '<th scope="col" class="text-orange">Total</th>'
 
 
     document.getElementById('tableHeader').innerHTML = `<tr>${innerTableContent}</tr>`;
@@ -106,7 +140,7 @@ async function renderScoreCard() {
         yardOut += yardage;
         total += yardage;
     innerTableContentBody += `<th scope="col">${yardage}</th>`}
-    innerTableContentBody += `<th scope="col">${yardOut}</th>`
+    innerTableContentBody += `<th scope="col" class="text-green">${yardOut}</th>`
     
     //in -------
     yardOut = 0;
@@ -115,8 +149,8 @@ async function renderScoreCard() {
         yardOut += yardage;
         total += yardage;
     innerTableContentBody += `<th scope="col">${yardage}</th>`}
-    innerTableContentBody += `<th scope="col">${yardOut}</th>`;
-    innerTableContentBody += `<th scope="col">${total}</th></tr>`;
+    innerTableContentBody += `<th scope="col" class="text-green">${yardOut}</th>`;
+    innerTableContentBody += `<th scope="col" class="text-orange">${total}</th></tr>`;
 
 
 
@@ -131,7 +165,7 @@ async function renderScoreCard() {
             parOut += pars;
             total += pars;
         innerTableContentBody += `<th scope="col">${pars}</th>`}
-        innerTableContentBody += `<th scope="col">${parOut}</th>`
+        innerTableContentBody += `<th scope="col" class="text-green">${parOut}</th>`
         
         // in -----
         parOut = 0;
@@ -140,8 +174,8 @@ async function renderScoreCard() {
             parOut += pars;
             total += pars;
         innerTableContentBody += `<th scope="col">${pars}</th>`}
-        innerTableContentBody += `<th scope="col">${parOut}</th>`
-        innerTableContentBody += `<th scope="col">${total}</th></tr>`;
+        innerTableContentBody += `<th scope="col" class="text-green">${parOut}</th>`
+        innerTableContentBody += `<th scope="col" class="text-orange">${total}</th></tr>`;
 
 
         // handicap ------------------------------------------------------------------------------------------------------------------------------
@@ -153,7 +187,7 @@ async function renderScoreCard() {
             hcpOut += hcp;
             total += hcp;
         innerTableContentBody += `<th scope="col">${hcp}</th>`}
-        innerTableContentBody += `<th scope="col">${hcpOut}</th>`;
+        innerTableContentBody += `<th scope="col" class="text-green">${hcpOut}</th>`;
 
         // in -----
         hcpOut = 0;
@@ -162,8 +196,8 @@ async function renderScoreCard() {
             hcpOut += hcp;
             total += hcp;
         innerTableContentBody += `<th scope="col">${hcp}</th>`}
-        innerTableContentBody += `<th scope="col">${hcpOut}</th>`;
-        innerTableContentBody += `<th scope="col">${total}</th></tr>`;
+        innerTableContentBody += `<th scope="col" class="text-green">${hcpOut}</th>`;
+        innerTableContentBody += `<th scope="col" class="text-orange">${total}</th></tr>`;
 
 // add all players --------------------------------------------------------------------------------------------------------------------
         for (let j = 0; j < player.length; j++) {
@@ -185,7 +219,7 @@ async function renderScoreCard() {
                 }
                 innerTableContentBody += `<th onclick='addScoreData(${i}, ${player[j].id}, ${j})' data-bs-toggle="modal" data-bs-target="#newScoreModal">${playerScore}</th>`
             }
-            innerTableContentBody += `<th scope="col">${bigPlayerScore}</th>`;
+            innerTableContentBody += `<th scope="col" class="text-green">${bigPlayerScore}</th>`;
 
             // in ---------
             bigPlayerScore = 0;
@@ -200,8 +234,8 @@ async function renderScoreCard() {
                 }
                 innerTableContentBody += `<th onclick='addScoreData(${i}, ${player[j].id}, ${j})' data-bs-toggle="modal" data-bs-target="#newScoreModal">${playerScore}</th>`
             }
-            innerTableContentBody += `<th scope="col">${bigPlayerScore}</th>`;
-            innerTableContentBody += `<th scope="col">${total}</th></tr>`;
+            innerTableContentBody += `<th scope="col" class="text-green">${bigPlayerScore}</th>`;
+            innerTableContentBody += `<th scope="col" class="text-orange">${total}</th></tr>`;
 
             // toastr for when game is complete --------------------
             if (done === true && player[j].completed === false) {
@@ -228,47 +262,21 @@ async function renderScoreCard() {
 
         }
 
+        // display all data
     document.getElementById('tableBody').innerHTML =  innerTableContentBody;
     document.getElementById('addPlayer').style.visibility = 'visible';
     document.getElementById('header').innerHTML = `<h2>${result.name}</h2><div class='coolBorder my-1'></div>`;
 
 }
 
+// adds the picture in the background ----------------------------------------------------------------------------------------------------------------
 async function renderBackPicture() {
     document.getElementsByTagName('body')[0].style.backgroundImage = null;
     let result = await getAvailableCourses();
     document.getElementsByTagName('body')[0].style.backgroundImage = await `url('${result[select.number].image}')`;
 }
 
-class players {
-    constructor(name, id = getNextId(), scores = []) {
-        this.name = name;
-        this.id = id;
-        this.scores = scores;
-        this.completed = false;
-    }
-
-    makeEmptyScores() {
-        for (let i = 0; i < length ; i++) {
-            this.scores.push(null);
-        }
-    }
-}
-let buttonCounter = 0;
-function addPerson() {
-    
-    if (buttonCounter === 0) {
-        document.getElementsByClassName('createName')[0].style.visibility = 'visible';
-        document.getElementsByClassName('createName')[0].classList.remove('animate__zoomOut');
-        document.getElementsByClassName('createName')[0].classList.add('animate__zoomIn');
-        buttonCounter = 1;
-    } else if (buttonCounter === 1) {
-        document.getElementsByClassName('createName')[0].classList.remove('animate__zoomIn');
-        document.getElementsByClassName('createName')[0].classList.add('animate__zoomOut');
-        setTimeout(() => document.getElementsByClassName('createName')[0].style.visibility = 'hidden', 400);
-        buttonCounter = 0
-    }
-}
+// adds a person to the game board ----------------------------------------------------------------------------------------------------------------
 
 function updateTable(name) {
     if (name) {
@@ -279,20 +287,17 @@ function updateTable(name) {
     }
 }
 
-function getNextId() {
-    let stamp = new Date().getTime()
-    return stamp
-}
 
-var currentScoreId = 0;
-var currentPlayerId = 0;
-var currentPlayerNumber = 0;
+// add scores ----------------------------------------------------------------------------------------------------------------
 
+// get score location
 function addScoreData(scoreId, playerId, playerNumber) {
     currentPlayerNumber = playerNumber;
     currentPlayerId = playerId;
     currentScoreId = scoreId;
 }
+
+// add score
 async function addScore() {
     let result = await getCourseData();
 
@@ -301,7 +306,21 @@ async function addScore() {
     renderScoreCard();
 }
 
+
+// turns teebox select invisible ----------------------------------------------------------------------------------------------------------------
 function invis() {
     document.getElementsByClassName('invisibleSelect')[0].classList.add('invisible');
     document.getElementsByClassName('invisibleSelect')[1].classList.add('invisible');
+}
+
+// turns the annoying arrow at the beginning invisible -------------------------------------------------------------------------------------------
+function deleteArrow() {
+        document.getElementById('arrow').classList.add('invisible2')
+        document.getElementById('arrow').classList.remove('animate__infinite')
+        removeAnimation(document.getElementById('arrow'));
+}
+
+// removes animation ----------------------------------------------------------------------------------------------------------------
+function removeAnimation(element) {
+    element.classList.remove('animate__infinite');
 }

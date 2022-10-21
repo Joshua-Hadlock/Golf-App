@@ -77,3 +77,10 @@ $black: #161411;
     font-family: 'DM Serif Text', serif;
     font-size: 45px;
 }
+
+body {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}

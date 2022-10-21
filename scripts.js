@@ -12,7 +12,6 @@ let data = {};
    async function getAvailableCourses() {
     let response = await fetch('https://golf-courses-api.herokuapp.com/courses/');
     data = await response.json();
-    console.log(data.courses);
     return data.courses;
 }
 
@@ -20,8 +19,10 @@ let data = {};
 async function askCourses() {
 let result = await getAvailableCourses();
 let courseOptionsHtml = '';
+let n = 0;
 await result.forEach((course) => {
- courseOptionsHtml += `<option value="${course.id}">${course.name}</option>`;
+ courseOptionsHtml += `<option value='{"id": "${course.id}","number": ${n}}'>${course.name}</option>`;
+ n += 1;
 });
 
 document.getElementById('course-select').innerHTML = courseOptionsHtml;
@@ -32,13 +33,19 @@ askCourses()
 var select = document.getElementById('course-select');
 
 async function getCourseData() {
-    let response = await fetch('https://golf-courses-api.herokuapp.com/courses/' + select.value);
+    select = document.getElementById('course-select');
+    
+        select = JSON.parse(select.value);
+        
+    
+    
+    let response = await fetch('https://golf-courses-api.herokuapp.com/courses/' + select.id);
     let courseData = await response.json();
-    console.log(courseData.data)
     return courseData.data;
 }
 
 async function functionTeeBox() {
+    renderBackPicture();
     document.getElementsByClassName('invisibleSelect')[0].classList.remove('invisible');
     document.getElementsByClassName('invisibleSelect')[1].classList.remove('invisible');
     let result = await getCourseData();
@@ -161,6 +168,7 @@ async function renderScoreCard() {
 // add all players --------------------------------------------------------------------------------------------------------------------
         for (let j = 0; j < player.length; j++) {
             total = 0;
+            let done = true;
             let bigPlayerScore = 0;
             innerTableContentBody += `<tr><th scope="col">${player[j].name}</th>`
 
@@ -172,6 +180,7 @@ async function renderScoreCard() {
                     bigPlayerScore += playerScore;
                     total += playerScore
                 } else {
+                    done = false;
                     playerScore = '';
                 }
                 innerTableContentBody += `<th onclick='addScoreData(${i}, ${player[j].id}, ${j})' data-bs-toggle="modal" data-bs-target="#newScoreModal">${playerScore}</th>`
@@ -186,6 +195,7 @@ async function renderScoreCard() {
                     bigPlayerScore += playerScore;
                     total += playerScore;
                 } else {
+                    done = false;
                     playerScore = '';
                 }
                 innerTableContentBody += `<th onclick='addScoreData(${i}, ${player[j].id}, ${j})' data-bs-toggle="modal" data-bs-target="#newScoreModal">${playerScore}</th>`
@@ -193,12 +203,41 @@ async function renderScoreCard() {
             innerTableContentBody += `<th scope="col">${bigPlayerScore}</th>`;
             innerTableContentBody += `<th scope="col">${total}</th></tr>`;
 
+            // toastr for when game is complete --------------------
+            if (done === true && player[j].completed === false) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                  }
+                toastr.success(`${player[j].name} has completed course ${result.name}!`, `Congratulations!!!`)
+                player[j].completed = true;
+            }
 
         }
 
     document.getElementById('tableBody').innerHTML =  innerTableContentBody;
     document.getElementById('addPlayer').style.visibility = 'visible';
     document.getElementById('header').innerHTML = `<h2>${result.name}</h2><div class='coolBorder my-1'></div>`;
+
+}
+
+async function renderBackPicture() {
+    document.getElementsByTagName('body')[0].style.backgroundImage = null;
+    let result = await getAvailableCourses();
+    document.getElementsByTagName('body')[0].style.backgroundImage = await `url('${result[select.number].image}')`;
 }
 
 class players {
@@ -206,6 +245,7 @@ class players {
         this.name = name;
         this.id = id;
         this.scores = scores;
+        this.completed = false;
     }
 
     makeEmptyScores() {
